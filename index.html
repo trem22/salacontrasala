@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala contra Sala - 9º ano</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00a040; /* Stronger Brazilian soccer green */
+            --secondary-color: #00d455; /* Lighter green */
+            --accent-color: #007c2e; /* Darker green */
+            --light-bg: #f0f8f0; /* Light green background */
+            --text-color: #124a12; /* Green-tinted text */
+            --progress-height: 30px;
+            --progress-border-radius: 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::before, h1::after {
+            content: "⚽";
+            position: relative;
+            margin: 0 10px;
+            font-size: 2rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .fundraising-info {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        .current-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .progress-container {
+            position: relative;
+            margin-bottom: 120px; /* Increased to accommodate milestone images */
+            padding-top: 20px;
+        }
+
+        .progress-track {
+            height: var(--progress-height);
+            background-color: #e9ecef;
+            border-radius: var(--progress-border-radius);
+            position: relative;
+            overflow: visible; /* Changed to visible to show milestone markers */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--progress-border-radius);
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.1) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            animation: move 20s linear infinite;
+        }
+
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 500px 0; }
+        }
+
+        .milestones {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .milestone {
+            position: absolute;
+            width: 3px;
+            height: 100%;
+            background-color: var(--accent-color);
+            z-index: 10;
+        }
+
+        .milestone-550 { left: calc(550 / 800 * 100%); }
+        .milestone-700 { left: calc(700 / 800 * 100%); }
+        .milestone-750 { left: calc(750 / 800 * 100%); }
+        .milestone-800 { left: calc(100% - 3px); } /* Adjusted to keep inside track */
+
+        .milestone-labels {
+            position: relative;
+            height: 120px;
+            margin-top: 30px; /* Increased spacing */
+        }
+
+        .milestone-label {
+            position: absolute;
+            text-align: center;
+            width: 80px;
+            margin-left: -40px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* Adjusted positions to prevent overlap */
+        .milestone-label-550 { left: calc(550 / 800 * 100%); top: 0; }
+        .milestone-label-700 { left: calc(700 / 800 * 100%); top: 0; }
+        .milestone-label-750 { left: calc(750 / 800 * 100%); top: 0; }
+        .milestone-label-800 { left: 100%; top: 0; }
+
+        .milestone-image {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            margin-top: 10px;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pix-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 124, 46, 0.3);
+        }
+
+        .pix-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 124, 46, 0.4);
+            background-color: var(--secondary-color);
+        }
+
+        .pix-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 124, 46, 0.2);
+        }
+
+        .pix-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: all 0.6s ease;
+        }
+
+        .pix-button:hover::before {
+            left: 100%;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        /* Responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            /* Prevent image overlap on small screens */
+            .milestone-labels {
+                height: 220px; /* Increased height */
+            }
+            
+            .milestone-label {
+                width: 60px;
+                margin-left: -30px;
+                font-size: 0.8rem;
+            }
+            
+            /* Staggered positioning for mobile */
+            .milestone-label-550 { top: 0; }
+            .milestone-label-700 { top: 110px; }
+            .milestone-label-750 { top: 0; }
+            .milestone-label-800 { top: 110px; }
+            
+            .milestone-image {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sala contra Sala - 9º ano</h1>
+        </header>
+
+        <div class="fundraising-info">
+            <p>Arrecadação para o campeonato de futebol entre salas</p>
+            <div class="current-amount">
+                R$ <span id="current-value">0</span> de R$ 800
+            </div>
+            <p>Faltam R$ <span id="remaining-value">800</span></p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-track">
+                <div class="progress-bar" id="progress-bar"></div>
+                <!-- Goal lines are now inside the progress track -->
+                <div class="milestones">
+                    <div class="milestone milestone-550"></div>
+                    <div class="milestone milestone-700"></div>
+                    <div class="milestone milestone-750"></div>
+                    <div class="milestone milestone-800"></div>
+                </div>
+            </div>
+            
+            <div class="milestone-labels">
+                <div class="milestone-label milestone-label-550">
+                    R$ 550
+                    <img src="image550.jpeg" alt="Meta R$ 550" class="milestone-image">
+                </div>
+                <div class="milestone-label milestone-label-700">
+                    R$ 700
+                    <img src="image700.jpeg" alt="Meta R$ 700" class="milestone-image">
+                </div>
+                <div class="milestone-label milestone-label-750">
+                    R$ 750
+                    <img src="image750.jpeg" alt="Meta R$ 750" class="milestone-image">
+                </div>
+                <div class="milestone-label milestone-label-800">
+                    R$ 800
+                    <img src="image800.jpeg" alt="Meta R$ 800" class="milestone-image">
+                </div>
+            </div>
+        </div>
+
+        <button class="pix-button" id="pix-button">
+            <i class="fas fa-qrcode"></i> Copie a chave Pix e doe!
+        </button>
+
+        <div class="footer">
+            <p>Obrigado pelo seu apoio ao nosso campeonato! ⚽</p>
+        </div>
+    </div>
+
+    <script>
+        // Variable to control the current amount raised - CHANGE THIS VALUE TO UPDATE THE PROGRESS BAR
+        let currentAmount = 0;
+        const goalAmount = 800;
+        const pixKey = "00020101021126330014br.gov.bcb.pix0111599807078015204000053039865802BR5917LUIS G SANSIVIERO6009SAO PAULO62070503***6304B7BD";
+        
+        // Update the progress bar and values
+        function updateProgress(amount) {
+            const progressBar = document.getElementById('progress-bar');
+            const currentValueSpan = document.getElementById('current-value');
+            const remainingValueSpan = document.getElementById('remaining-value');
+            
+            // Calculate percentage and update the width of the progress bar
+            const percentage = (amount / goalAmount) * 100;
+            progressBar.style.width = `${percentage}%`;
+            
+            // Update the text values
+            currentValueSpan.textContent = amount;
+            remainingValueSpan.textContent = goalAmount - amount;
+        }
+        
+        // Initialize the progress bar with the current amount
+        updateProgress(currentAmount);
+        
+        // Copy Pix key functionality
+        const pixButton = document.getElementById('pix-button');
+        pixButton.addEventListener('click', function() {
+            navigator.clipboard.writeText(pixKey).then(function() {
+                // Success - change button text temporarily
+                const originalText = pixButton.innerHTML;
+                pixButton.innerHTML = '<i class="fas fa-check"></i> Cole no app do seu banco';
+                
+                // Change back after 3 seconds
+                setTimeout(function() {
+                    pixButton.innerHTML = originalText;
+                }, 3000);
+            }).catch(function() {
+                // Error handling
+                alert('Falha ao copiar a chave Pix. Por favor, tente novamente.');
+            });
+        });
+    </script>
+</body>
+</html>
