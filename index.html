@@ -81,7 +81,7 @@
 
         .progress-container {
             position: relative;
-            margin-bottom: 120px; /* Increased to accommodate milestone images */
+            margin-bottom: 30px;
             padding-top: 20px;
         }
 
@@ -90,7 +90,7 @@
             background-color: #e9ecef;
             border-radius: var(--progress-border-radius);
             position: relative;
-            overflow: visible; /* Changed to visible to show milestone markers */
+            overflow: visible;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
@@ -144,28 +144,34 @@
         .milestone-550 { left: calc(550 / 800 * 100%); }
         .milestone-700 { left: calc(700 / 800 * 100%); }
         .milestone-750 { left: calc(750 / 800 * 100%); }
-        .milestone-800 { left: calc(100% - 3px); } /* Adjusted to keep inside track */
+        .milestone-800 { left: calc(100% - 3px); }
 
-        .milestone-labels {
-            position: relative;
-            height: 120px;
-            margin-top: 30px; /* Increased spacing */
+        /* Milestone list display */
+        .milestone-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        .milestone-label {
-            position: absolute;
-            text-align: center;
-            width: 80px;
-            margin-left: -40px;
-            font-weight: bold;
-            color: var(--accent-color);
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            transition: transform 0.2s ease;
         }
 
-        /* Adjusted positions to prevent overlap */
-        .milestone-label-550 { left: calc(550 / 800 * 100%); top: 0; }
-        .milestone-label-700 { left: calc(700 / 800 * 100%); top: 0; }
-        .milestone-label-750 { left: calc(750 / 800 * 100%); top: 0; }
-        .milestone-label-800 { left: 100%; top: 0; }
+        .milestone-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .milestone-image-container {
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
 
         .milestone-image {
             width: 70px;
@@ -173,9 +179,30 @@
             object-fit: cover;
             border: 3px solid var(--primary-color);
             border-radius: 10px;
-            margin-top: 10px;
             background-color: #f0f0f0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .milestone-image:hover {
+            transform: scale(1.05);
+        }
+
+        .milestone-text {
+            flex-grow: 1;
+        }
+
+        .milestone-value {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .milestone-description {
+            color: var(--text-color);
+            font-size: 0.9rem;
         }
 
         .pix-button {
@@ -235,32 +262,75 @@
             color: var(--accent-color);
         }
 
+        /* Image Modal/Lightbox */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border: 3px solid white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.2);
+        }
+
         /* Responsiveness */
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.8rem;
             }
             
-            /* Prevent image overlap on small screens */
-            .milestone-labels {
-                height: 220px; /* Increased height */
-            }
-            
-            .milestone-label {
-                width: 60px;
-                margin-left: -30px;
-                font-size: 0.8rem;
-            }
-            
-            /* Staggered positioning for mobile */
-            .milestone-label-550 { top: 0; }
-            .milestone-label-700 { top: 110px; }
-            .milestone-label-750 { top: 0; }
-            .milestone-label-800 { top: 110px; }
-            
             .milestone-image {
                 width: 50px;
                 height: 50px;
+            }
+
+            .milestone-item {
+                padding: 8px;
+            }
+
+            .milestone-value {
+                font-size: 1rem;
             }
         }
     </style>
@@ -291,22 +361,43 @@
                 </div>
             </div>
             
-            <div class="milestone-labels">
-                <div class="milestone-label milestone-label-550">
-                    R$ 550
-                    <img src="image550.jpeg" alt="Meta R$ 550" class="milestone-image">
+            <!-- New List-based milestone display -->
+            <div class="milestone-list">
+                <div class="milestone-item">
+                    <div class="milestone-image-container">
+                        <img src="image550.jpeg" alt="Meta R$ 550" class="milestone-image">
+                    </div>
+                    <div class="milestone-text">
+                        <div class="milestone-value">R$ 550</div>
+                        <div class="milestone-description">Primeira meta para o campeonato</div>
+                    </div>
                 </div>
-                <div class="milestone-label milestone-label-700">
-                    R$ 700
-                    <img src="image700.jpeg" alt="Meta R$ 700" class="milestone-image">
+                <div class="milestone-item">
+                    <div class="milestone-image-container">
+                        <img src="image700.jpeg" alt="Meta R$ 700" class="milestone-image">
+                    </div>
+                    <div class="milestone-text">
+                        <div class="milestone-value">R$ 700</div>
+                        <div class="milestone-description">Próxima etapa do projeto</div>
+                    </div>
                 </div>
-                <div class="milestone-label milestone-label-750">
-                    R$ 750
-                    <img src="image750.jpeg" alt="Meta R$ 750" class="milestone-image">
+                <div class="milestone-item">
+                    <div class="milestone-image-container">
+                        <img src="image750.jpeg" alt="Meta R$ 750" class="milestone-image">
+                    </div>
+                    <div class="milestone-text">
+                        <div class="milestone-value">R$ 750</div>
+                        <div class="milestone-description">Quase lá! Falta pouco</div>
+                    </div>
                 </div>
-                <div class="milestone-label milestone-label-800">
-                    R$ 800
-                    <img src="image800.jpeg" alt="Meta R$ 800" class="milestone-image">
+                <div class="milestone-item">
+                    <div class="milestone-image-container">
+                        <img src="image800.jpeg" alt="Meta R$ 800" class="milestone-image">
+                    </div>
+                    <div class="milestone-text">
+                        <div class="milestone-value">R$ 800</div>
+                        <div class="milestone-description">Meta final completa!</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -317,6 +408,16 @@
 
         <div class="footer">
             <p>Obrigado pelo seu apoio ao nosso campeonato! ⚽</p>
+        </div>
+    </div>
+
+    <!-- Image Modal/Lightbox -->
+    <div class="image-modal" id="image-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="" alt="Imagem ampliada" class="modal-image" id="modal-image">
         </div>
     </div>
 
@@ -361,6 +462,47 @@
                 alert('Falha ao copiar a chave Pix. Por favor, tente novamente.');
             });
         });
+
+        // Image modal functionality
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-image');
+        const closeModal = document.getElementById('close-modal');
+        const milestoneImages = document.querySelectorAll('.milestone-image');
+
+        // Open modal when any milestone image is clicked
+        milestoneImages.forEach(img => {
+            img.addEventListener('click', () => {
+                modalImg.src = img.src;
+                modalImg.alt = img.alt;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling while modal is open
+            });
+        });
+
+        // Close modal when the X button is clicked
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modalImg.src = '';
+            }, 300);
+            document.body.style.overflow = ''; // Re-enable scrolling
+        });
+
+        // Close modal when clicking outside the image
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal.click();
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal.click();
+            }
+        });
     </script>
+</body>
+</html>
 </body>
 </html>
